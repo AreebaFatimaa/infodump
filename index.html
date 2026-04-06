@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Tire Company That Ate the World</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Lora', Georgia, serif;
+            font-size: 19px;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: #fff;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── HERO / HEADER ── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            background: #0b0b0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-surface {
+            position: absolute;
+            bottom: 38%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .hero-animation {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-animation .tire-svg,
+        .hero-animation .plate-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .hero-animation .tire-svg {
+            opacity: 1;
+            transform: translateX(0) rotate(0deg);
+        }
+
+        .hero-animation.rolling .tire-svg {
+            transform: translateX(60px) rotate(360deg);
+        }
+
+        .hero-animation.morphed .tire-svg {
+            opacity: 0;
+            transform: translateX(60px) rotate(720deg) scale(0.7);
+        }
+
+        .hero-animation .plate-svg {
+            opacity: 0;
+            transform: scale(0.6) rotate(-30deg);
+        }
+
+        .hero-animation.morphed .plate-svg {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .hero-text {
+            text-align: center;
+            color: #fff;
+            padding: 0 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 1.8s, transform 1s ease 1.8s;
+        }
+
+        .hero-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 900;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subhead {
+            font-family: 'Lora', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            color: rgba(255,255,255,0.7);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        /* ── CONTENT AREA ── */
+        .content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .byline {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 2.5rem;
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+        }
+
+        .byline a {
+            color: #c0392b;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .byline a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            margin-bottom: 1.4rem;
+        }
+
+        a {
+            color: #c0392b;
+        }
+
+        /* ── BROTHERS SECTION ── */
+        .brothers-section {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin: 2rem 0 3rem;
+        }
+
+        .brothers-section .brother-img {
+            flex: 0 0 160px;
+            width: 160px;
+        }
+
+        .brothers-section .brother-img img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .brothers-section .brothers-text {
+            flex: 1;
+        }
+
+        .brothers-section .brothers-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── MYSTERY DINERS IMAGE ── */
+        .mystery-diners-figure {
+            margin: 2rem 0;
+        }
+
+        .mystery-diners-figure img {
+            width: 100%;
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        /* ── SCROLLY SECTION ── */
+        .scrolly-container {
+            position: relative;
+            margin: 3rem 0;
+        }
+
+        .sticky-chart {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .sticky-chart .chart-wrapper {
+            width: 100%;
+            max-width: 780px;
+            padding: 1rem;
+        }
+
+        .sticky-chart .chart-wrapper img {
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 780px;
+            padding: 0 1rem;
+        }
+
+        .sticky-chart .chart-wrapper img.active {
+            opacity: 1;
+        }
+
+        .scroll-steps {
+            position: relative;
+            z-index: 2;
+        }
+
+        .scroll-step {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .scroll-step .step-content {
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 1.8rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .scroll-step .step-content p {
+            margin-bottom: 0;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: #f5f5f5;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 3rem 1.5rem;
+            color: #666;
+            margin-top: 4rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer a {
+            color: #c0392b;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 680px) {
+            .brothers-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .brothers-section .brother-img {
+                flex: none;
+                width: 120px;
+            }
+
+            .hero-animation {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        /* ── SCROLL FADE-IN ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <header class="hero">
+        <div class="hero-animation" id="heroAnimation">
+            <img class="tire-svg" src="michelin_tire_realistic.svg" alt="Michelin tire">
+            <img class="plate-svg" src="plate w food.svg" alt="Plate with food">
+        </div>
+        <div class="hero-surface"></div>
+        <div class="hero-text" id="heroText">
+            <h1>The Tire Company That Ate the World</h1>
+            <p class="subhead">How a French tire manufacturer became the world's leading authority on food</p>
+        </div>
+    </header>
+
+    <!-- ═══════════════ ARTICLE BODY ═══════════════ -->
+    <div class="content">
+        <div class="byline">
+            By <a href="https://areebafatimaa.github.io" target="_blank" rel="noopener">Areeba Fatima</a>
+        </div>
+
+        <p class="fade-in">The Michelin Guide, which often influences people's decision to try a restaurant in a new country, was originally conceived as a little guidebook for tourists, to encourage roadtrips. And like most successful marketing campaigns, the guide got a life of its own, establishing itself as the global authority on culinary success.</p>
+
+        <p class="fade-in">In 1886, a German engine designer Carl Benz developed the Benz Patent Motor Car. Someone had finally figured out how to mount an internal combustion engine to a carriage.</p>
+
+        <!-- Brothers flanking the text -->
+        <div class="brothers-section fade-in">
+            <div class="brother-img">
+                <img src="brother1.png" alt="Andre Michelin">
+            </div>
+            <div class="brothers-text">
+                <p>Three years later, in a small French town called Clermont-Ferrand, Andre Michelin and his brother Edouard Michelin founded a tyre company. At that time there were only 3,000 cars in the country.</p>
+                <p>As time passed, the brothers realized they had to innovate their marketing strategy to convince more people to get on the road. They launched the Michelin Guide, a handbook with maps, information on how to change a tire, how to fill your car up with fuel.</p>
+                <p>Two decades later, they innovated their methodology in a way that would change how the word 'Michelin' is perceived forever. They added a list of hotels and restaurants in Paris.</p>
+            </div>
+            <div class="brother-img">
+                <img src="brother2.png" alt="Edouard Michelin">
+            </div>
+        </div>
+
+        <p class="fade-in">The guide blew up. The Michelin brothers then hired a team of 'mystery diners.'</p>
+
+        <figure class="mystery-diners-figure fade-in">
+            <img src="mystery-diners.jpg" alt="Mystery diners">
+        </figure>
+
+        <p class="fade-in">In six years, the Michelin Guide had accumulated serious acclaim, and the team started awarding their favorite restaurants a single star. From one star to another, and then another, the guide continued to grow, both in popularity and its ranking methodology.</p>
+    </div>
+
+    <!-- ═══════════════ SCROLLY CHARTS ═══════════════ -->
+    <section class="scrolly-container" id="scrollyCharts">
+        <div class="sticky-chart">
+            <div class="chart-wrapper">
+                <img src="chart1.svg" alt="Chart 1" id="chart1" class="active">
+                <img src="chart2.svg" alt="Chart 2" id="chart2">
+                <img src="chart3.svg" alt="Chart 3" id="chart3">
+            </div>
+        </div>
+        <div class="scroll-steps">
+            <div class="scroll-step" data-chart="1">
+                <div class="step-content">
+                    <p>In 1936, they finally published their first set of rankings, and the rest is history.</p>
+                </div>
+            </div>
+            <div class="scroll-step" data-chart="2">
+                <div class="step-content">
+                    <p>The Michelin Guide now rates over 40,000 restaurants across 3 continents.</p>
+                </div>
+            </div>
+            <div class="scroll-step" data-chart="3">
+                <div class="step-content">
+                    <p>What started as a strategy to sell tires became the most prestigious culinary rating system in the world.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+        <p>The data for this story was adapted from an infographic prepared by the <a href="https://www.informationisbeautifulawards.com/showcase/7119-michelin-tasting-menu" target="_blank" rel="noopener">University of Washington</a>.</p>
+    </footer>
+
+    <!-- ═══════════════ SCRIPTS ═══════════════ -->
+    <script>
+        // ── Hero animation: tire rolls then morphs into plate ──
+        window.addEventListener('load', () => {
+            const anim = document.getElementById('heroAnimation');
+            const text = document.getElementById('heroText');
+
+            // Phase 1: roll
+            setTimeout(() => anim.classList.add('rolling'), 400);
+            // Phase 2: morph
+            setTimeout(() => anim.classList.add('morphed'), 1400);
+            // Phase 3: show text
+            setTimeout(() => text.classList.add('visible'), 1800);
+        });
+
+        // ── Fade-in on scroll (IntersectionObserver) ──
+        const fadeEls = document.querySelectorAll('.fade-in');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    fadeObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        fadeEls.forEach(el => fadeObserver.observe(el));
+
+        // ── Scrollytelling chart switcher ──
+        const charts = [
+            document.getElementById('chart1'),
+            document.getElementById('chart2'),
+            document.getElementById('chart3')
+        ];
+        const steps = document.querySelectorAll('.scroll-step');
+
+        function showChart(index) {
+            charts.forEach((c, i) => {
+                c.classList.toggle('active', i === index);
+            });
+        }
+
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const idx = parseInt(e.target.dataset.chart) - 1;
+                    showChart(idx);
+                }
+            });
+        }, { rootMargin: '-40% 0px -40% 0px' });
+
+        steps.forEach(step => stepObserver.observe(step));
+    </script>
+
+</body>
+</html>
